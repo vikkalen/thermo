@@ -210,7 +210,7 @@ void RFM12B::InterruptHandler() {
     if (rxfill == 0 && networkID != 0)
       rf12_buf[rxfill++] = networkID;
 
-    //Serial.print(out, HEX); Serial.print(' ');
+    //Serial.print(in, HEX); Serial.print(' ');
     rf12_buf[rxfill++] = in;
     rf12_crc = _crc16_update(rf12_crc, in);
 
@@ -295,7 +295,7 @@ bool RFM12B::ReceiveComplete() {
 bool RFM12B::CanSend() {
   // no need to test with interrupts disabled: state TXRECV is only reached
   // outside of ISR and we don't care if rxfill jumps from 0 to 1 here
-  if (rxstate == TXRECV && rxfill == 0 && (Byte(0x00) & (RF_RSSI_BIT >> 8)) == 0) {
+  if (rxstate == TXRECV && rxfill == 0 && (Control(0x00) & (RF_RSSI_BIT >> 8)) == 0) {
     XFER(RF_IDLE_MODE); // stop receiver
     //XXX just in case, don't know whether these RF12 reads are needed!
     // rf12_XFER(0x0000); // status register
