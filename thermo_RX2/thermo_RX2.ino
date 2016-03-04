@@ -40,7 +40,7 @@ void loop() {
     uint8_t strength = radio.rssi;
     Serial.print(sender);
     Serial.print(";");
-    for(uint8_t idx = 0; idx < *radio.DataLen; idx += 2)
+    for(uint8_t idx = 0; idx < *radio.DataLen && idx < RF12_MAXDATA; idx += 2)
     {
       Serial.print(*(int*) (radio.Data + idx));
       Serial.print(";");
@@ -86,7 +86,9 @@ void loop() {
         payload++;
 
         //radio.SendStart(node, payload, (txBufferIdx - 1) << 1, false, false, 0);
+        //Serial.println("transmitting");
         radio.Send(node, payload, (txBufferIdx - 1) << 1, false, 0);
+        //Serial.println("transmitted");
       }
       serialBufferIdx = 0;
       txBufferIdx = 0;
